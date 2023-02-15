@@ -1,0 +1,17 @@
+import requests
+from bs4 import BeautifulSoup
+import json
+import telebot
+import sqlite3 as sl
+
+
+user_url_html = requests.get("https://www.ulta.com/p/undaria-algae-body-butter-mini-pimprod2037845?sku=2601373&dcEvent=true")
+
+ulta_soup_html = BeautifulSoup(user_url_html.text, 'html.parser')
+
+product_image = ulta_soup_html.find_all("div", class_="MediaWrapper__Image_img")
+
+print(product_image)
+
+
+

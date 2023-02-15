@@ -1,0 +1,78 @@
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+import url_check, delete_product
+import sqlite3 as sl
+import sys
+import requests
+
+app = Flask(__name__)
+app.secret_key = 'a686c2b49481276e6e9a38305db564993a7d506bf4c54f6f33344fd2163116c2'
+
+@app.route('/', methods =["GET", "POST"])
+def get_link():
+
+    connect = sl.connect('ulta.db')
+    connect.row_factory = sl.Row
+    cur = connect.cursor()
+    cur.execute("select * from ulta")
+    rows = cur.fetchall();
+    
+    if request.method == "POST": 
+        if request.form.get('submit'):
+            session['link'] = request.form.get('link')
+            return redirect(url_for('confirm'))
+                
+        elif request.form.get('delete'): 
+            product_id = request.form.get('delete')
+            delete_product.delete_link(product_id)
+            flash("The product was removed successfully")
+            print(product_id)
+            sys.stdout.flush()
+            return redirect('/')
+        
+    connect.close()
+    return render_template('main.html', rows=rows)
+
+@app.route('/confirm', methods =["GET", "POST"])
+def confirm():
+    
+    try:
+        link = session.get('link', None)
+        name = url_check.url_parser(link)[1]
+        image = url_check.url_parser(link)[2]
+        product_id = link.partition("prod")
+        product_id = product_id[2]
+
+        connect = sl.connect('ulta.db')
+        cur = connect.cursor()
+        cur.execute("SELECT id FROM ulta WHERE id=?", (product_id,))
+        id_check = cur.fetchone()
+
+        if request.method == "POST":
+            if request.form.get('action1') == 'Yes':
+                if not id_check: 
+                    url_check.product_check(link)
+                    flash("The product is added successfully")
+                    return redirect('/')
+                else:
+                    flash("The product already exists")
+                    return redirect('/')
+            
+            elif request.form.get('action2') == 'No':
+                return redirect('/')
+            
+        return render_template('confirm.html', name=name, image=image)
+    
+    except requests.exceptions.MissingSchema:
+        flash("Please enter the correct link")
+        return redirect('/')
+    
+    except AttributeError:
+        flash("Please enter the correct link")
+        return redirect('/')
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+    

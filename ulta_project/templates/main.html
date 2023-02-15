@@ -1,0 +1,58 @@
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Ulta sale bot</title>
+    <meta charset="utf-8"> 
+  </head>
+  <body>
+
+    <form action="{{ url_for("get_link")}}" method="post">
+      <div class="user">
+        <label for="link">Username:</label>
+        <input type="text" value="Username" name="username"><br><br>
+        <label for="link">Password:</label>
+        <input type="password" value="Password" name="password"/>
+      </div>
+    </form>
+
+    <h1>Ulta sale bot</h1>
+
+    {% for msg in get_flashed_messages() %}
+     <div class="flash">{{msg}}</div>
+    {%endfor%}
+
+    <form action="{{ url_for("get_link")}}" method="post">
+      <label for="link">Enter the link:</label>
+      <input type="url" name="link">
+      <input type="submit" value="Submit" name="submit"/>
+    </form>
+
+    <div class="tableContainer">
+      <table>
+        <tr class="head">
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Sale price</th>
+          <th>Delete</th>
+        </tr>
+        {%for row in rows %}
+        <tr class="body">
+          <td><img src={{row["image"]}} alt={{row["image"]}} width="90" height="90"></td>
+          <td><a class="name" href={{row["url"]}}>{{row["name"]}}</a></td>
+          <td>${{row["price"]}}</td>
+          {% if None in row %}
+            <td>-</td>
+          {% else %}
+            <td>{{row["sale"]}}</td>
+          {%endif%}
+          <form action="{{ url_for("get_link")}}" method="post">
+            <td><button type="submit" value="{{row["id"]}}" name="delete" class="delete">&#x2715</button></td>
+          </form>
+        </tr>
+        {%endfor%}
+      </table>
+    </div>
+
+  </body>
+</html>

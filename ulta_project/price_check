@@ -1,0 +1,27 @@
+import telebot
+import sqlite3 as sl
+import json
+
+token = "5986648960:AAEzdmh31o4FwtBr7tYywiLKzH8GJ6soaGU"
+bot=telebot.TeleBot(token)
+
+connect = sl.connect('ulta.db')
+cur = connect.cursor()
+with connect:
+    data_list = connect.execute("SELECT id, url, name, price FROM ulta").fetchall() 
+    for data in data_list:       
+        id_product = data[0]
+        name = data[2]
+        price = data[3]
+        old_url = data[1]
+        new_url = url_parser(data[1])
+        new_price = new_url[0]
+        if float(new_price) > float(price):
+            update = "Update ulta SET sale = ? where id = ?"
+            cur.execute(update,(new_price, id_product))
+            percent_disc = (price-new_price)/price*100  
+            message = str(name) + " is now " + str(new_price) + ".\nThe discount is " + str(percent_disc) + ".\nTo buy follow the link: " + str(old_url)
+            bot.send_message("373068554", message) 
+connect.commit()
+cur.close()
+
