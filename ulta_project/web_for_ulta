@@ -5,7 +5,7 @@ import sys
 import requests
 
 app = Flask(__name__)
-app.secret_key = 'a686c2b49481276e6e9a38305db564993a7d506bf4c54f6f33344fd2163116c2'
+app.secret_key = ''
 
 @app.route('/', methods =["GET", "POST"])
 def get_link():
