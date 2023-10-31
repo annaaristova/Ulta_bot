@@ -2,7 +2,7 @@
 
 I created an Ulta-bot to track sales in the Ulta store and send sale notifications to the Telegram account.
 
-The bot has a simple UI interface where a user can add, delete, or track the current price and sale price (if available) of the product.
+The bot has a simple UI interface where a user can add, delete, or track the current price and sale price (if available) of the product. I deployed my app on a Linux-based server to check each item's price every 12 hours. If there is a sale on Ulta's website, the program adds the sale price to the sale column in the table and sends a sale notification to the Telegram account.
 
 ![image](https://github.com/annaaristova/Ulta_bot/assets/117958582/b6a28ebc-5545-498b-809b-aecc4d6843d0)
 
@@ -13,8 +13,6 @@ To add a new product, it's required to enter the link to the desired product fou
 If the "Yes" button is clicked, a notification is automatically sent to the user's Telegram account.
 
 ![image](https://github.com/annaaristova/Ulta_bot/assets/117958582/e018ee20-af2d-4a46-81e7-225e47437bc0)
-
-I deployed my app on a Linux-based server to check each item's price every 12 hours. If there is a sale on Ulta's website, the program adds the sale price to the sale column in the table and sends a sale notification to the Telegram account.
 
 To delete an item from the table, the user has to click the "delete" button in the delete table. 
 
